@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="page-title">Fitness Groups</h1>
+
+<div class="grid">
+
+    {% for g in groups %}
+        <div class="card">
+
+            <h3>{{ g.name }}</h3>
+            <p>{{ g.description }}</p>
+
+            <div class="card-actions">
+                <a href="/participant/join_group/{{ g.id }}" class="btn-secondary">
+                    Join Group
+                </a>
+            </div>
+
+        </div>
+    {% else %}
+        <p>No groups available</p>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

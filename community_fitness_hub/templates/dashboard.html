@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="page-title">Dashboard</h1>
+
+<!-- USER SUMMARY -->
+<div class="summary-grid">
+
+    <div class="summary-card">
+        <h3>Username</h3>
+        <p>{{ user.username }}</p>
+    </div>
+
+    <div class="summary-card">
+        <h3>Total Score</h3>
+        <p>{{ total_score }}</p>
+    </div>
+
+    <div class="summary-card">
+        <h3>Fitness Level</h3>
+        <p>{{ fitness_level }}</p>
+    </div>
+
+    <div class="summary-card">
+        <h3>Progress</h3>
+        <p>{{ progress }}%</p>
+    </div>
+
+</div>
+
+
+<!-- ================= ADMIN SECTION ================= -->
+{% if user.role == "admin" %}
+
+<div class="section">
+    <h2 class="section-title">Admin Actions</h2>
+
+    <div class="grid">
+
+        <!-- CREATE GROUP -->
+        <div class="card">
+            <h3>Create Fitness Group</h3>
+            <form action="/admin/create_group" method="POST">
+                <input type="text" name="name" placeholder="Group Name" required>
+                <input type="text" name="description" placeholder="Description" required>
+                <button>Create Group</button>
+            </form>
+        </div>
+
+        <!-- CREATE CHALLENGE -->
+        <div class="card">
+            <h3>Create Challenge</h3>
+            <form action="/admin/create_challenge" method="POST">
+                <input type="text" name="title" placeholder="Challenge Title" required>
+                <input type="text" name="description" placeholder="Description" required>
+                <input type="number" name="group_id" placeholder="Group ID" required>
+                <button>Create Challenge</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+{% endif %}
+
+
+<!-- ================= PARTICIPANT SECTION ================= -->
+{% if user.role == "participant" %}
+
+<div class="section">
+    <h2 class="section-title">Participant Actions</h2>
+
+    <div class="grid">
+
+        <!-- SUBMIT ACTIVITY -->
+        <div class="card">
+            <h3>Submit Activity</h3>
+            <form action="/participant/submit_activity" method="POST">
+                <input type="number" name="challenge_id" placeholder="Challenge ID" required>
+                <input type="number" name="steps" placeholder="Steps">
+                <input type="number" name="workouts" placeholder="Workouts">
+                <input type="number" name="minutes" placeholder="Active Minutes">
+                <button>Submit Activity</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+{% endif %}
+
+
+<!-- ================= GROUPS ================= -->
+<div class="section">
+    <h2 class="section-title">Available Groups</h2>
+
+    <div class="list-box">
+        {% for g in groups %}
+            <div class="list-item">
+                <strong>{{ g.name }}</strong>
+                <p>{{ g.description }}</p>
+
+                <!-- PARTICIPANT JOIN GROUP -->
+                {% if user.role == "participant" %}
+                    {% if current_user.participant and current_user.participant.group_id == g.id %}
+                        <p><strong>Joined</strong></p>
+                    {% else %}
+                        <a href="{{ url_for('participant.join_group', group_id=g.id) }}">
+                            <button>Join Group</button>
+                        </a>
+                    {% endif %}
+                {% endif %}
+
+            </div>
+        {% else %}
+            <p>No groups available</p>
+        {% endfor %}
+    </div>
+</div>
+
+
+<!-- ================= CHALLENGES ================= -->
+<div class="section">
+    <h2 class="section-title">Active Challenges</h2>
+
+    <div class="list-box">
+        {% for c in challenges %}
+            <div class="list-item">
+                <strong>{{ c.title }}</strong>
+                <p>Status: {{ c.status }}</p>
+
+                <!-- PARTICIPANT ENROLL BUTTON -->
+                {% if user.role == "participant" %}
+                    <a href="{{ url_for('challenge.enroll', challenge_id=c.id) }}">
+                        <button>Enroll</button>
+                    </a>
+                {% endif %}
+
+            </div>
+        {% else %}
+            <p>No challenges available</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

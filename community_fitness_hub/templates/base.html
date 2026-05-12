@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Community Fitness Hub</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="logo">
+        Community Fitness Hub
+    </div>
+
+    <nav class="nav">
+
+        <!-- DASHBOARD LINK -->
+        {% if current_user.is_authenticated %}
+            {% if current_user.role == "admin" %}
+                <a href="/admin/dashboard">Dashboard</a>
+            {% else %}
+                <a href="/participant/dashboard">Dashboard</a>
+            {% endif %}
+        {% endif %}
+
+        <!-- LEADERBOARD -->
+        <a href="/challenge/leaderboard">Leaderboard</a>
+
+        <!-- LOGOUT -->
+        {% if current_user.is_authenticated %}
+            <a href="/logout" class="logout">Logout</a>
+        {% endif %}
+
+    </nav>
+</header>
+
+
+<!-- FLASH MESSAGES -->
+<div class="flash-container">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="flash-message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+
+
+<!-- MAIN -->
+<main class="main">
+    {% block content %}{% endblock %}
+</main>
+
+
+<!-- FOOTER -->
+<footer class="footer">
+    <p>Community Fitness Hub</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="page-title">Challenges</h1>
+
+<div class="grid">
+
+    {% for c in challenges %}
+        <div class="card">
+
+            <h3>{{ c.title }}</h3>
+            <p>{{ c.description }}</p>
+            <p>Status: {{ c.status }}</p>
+
+            <div class="card-actions">
+
+                <!-- CORRECT ENROLL BUTTON -->
+                <a href="{{ url_for('challenge.enroll', challenge_id=c.id) }}" class="btn-primary">
+                    Join Challenge
+                </a>
+
+            </div>
+
+        </div>
+    {% else %}
+        <p>No challenges available</p>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

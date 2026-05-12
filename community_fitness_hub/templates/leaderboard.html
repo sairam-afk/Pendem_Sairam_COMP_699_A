@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="page-title">Leaderboard</h1>
+
+<div class="table-container">
+
+    <table class="leaderboard-table">
+
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Username</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for item in leaderboard %}
+            <tr class="
+                {% if loop.index == 1 %}rank-1
+                {% elif loop.index == 2 %}rank-2
+                {% elif loop.index == 3 %}rank-3
+                {% endif %}
+            ">
+                <td class="rank-cell">{{ loop.index }}</td>
+                <td>{{ item.username }}</td>
+                <td>{{ item.score }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}
